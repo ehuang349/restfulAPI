@@ -25,7 +25,7 @@ if __name__ == "__main__":
     if settings.environment == "dev":
         uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
     else:
-        uvicorn.run("main:app", host="0.0.0.0", port=8000, workers=4)
+        uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False, workers=4)
 
 
 # command below to start virtual environment if not automatic .\.venv\Scripts\activate
