@@ -3,7 +3,13 @@ from config import settings
 import uvicorn
 import aiohttp
 
-app = FastAPI()
+app = FastAPI(
+    title="My API",
+    description="API Description",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
 
 # fetch from an external API endpoint that is async
@@ -32,10 +38,5 @@ if __name__ == "__main__":
         uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False, workers=4)
 
 # guide for running in production specifically
-# step 1: Open terminal and navigate to the project directory
-# cd path\to\your\project
-# step 2: set environment variables for the environment
-# $env:ENVIRONMENT = "prod"
-# $env:DEBUG = "False"
-# step 3: run uvicorn command
-# uvicorn main:app --host 0.0.0.0 --port 8000 --w 4 --log-level info
+# create a start_dev.bat or start_prod.bat file
+# see files in project directory
