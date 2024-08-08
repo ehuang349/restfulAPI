@@ -1,19 +1,23 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional
 from config import settings
 import uvicorn
+import aiohttp
 
 app = FastAPI()
 
 
-# Data model
+# fetch from an external API endpoint that is async
+async def fetch(url: str) -> str:
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            return await response.text()
 
-class Item(BaseModel):
-    name: str
-    description: Optional[str] = None
-    price: float
-    tax: Optional[float] = None
+
+@app.get("/api/fetch_async")
+async def fetch_async():
+    url = "http://www.example.com/api/"
+    response = await fetch(url)
+    return {"content": response}
 
 
 @app.get("/api/")
@@ -24,14 +28,12 @@ def read_root():
 if __name__ == "__main__":
     if settings.environment == "dev":
         uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
-    else:
-        uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False, workers=4)
 
-
-# command below to start virtual environment if not automatic .\.venv\Scripts\activate
-# the path above will run the activate script that is built in to start the virtual environment.
-# If you want to deactivate it, use the .\.venv\Scripts\deactivate
-# you know the virtual environment is activated in terminal by the identity (.venv)
-
-#command below; this assumes you already started the virtual environment at the root of your project
-# python main.py
+# guide for running in production specifically
+# step 1: Open terminal and navigate to the project directory
+# cd path\to\your\project
+# step 2: set environment variables for the environment
+# $env:ENVIRONMENT = "prod"
+# $env:DEBUG = "False"
+# step 3: run uvicorn command
+# uvicorn main:app --host 0.0.0.0 --port 8000 --w 4 --log-level info
