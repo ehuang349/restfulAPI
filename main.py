@@ -28,6 +28,8 @@ def read_root():
 if __name__ == "__main__":
     if settings.environment == "dev":
         uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    else:
+        uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False, workers=4)
 
 # guide for running in production specifically
 # step 1: Open terminal and navigate to the project directory
